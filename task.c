@@ -24,13 +24,18 @@ int main(void) {
   };
 
   int deck[4][13] = { 0 };
-  int player_cards[5][2] = { 0 };
+  int player1[5][2] = { 0 };
+  int player2[5][2] = { 0 };
 
   srand(time(NULL));
 
   shuffle(deck);
-  deal(player_cards, deck, face, suit);
-  checkCombination(player_cards, face);
+
+  deal(player1, deck, face, suit);
+  deal(player2, deck, face, suit);
+
+  checkCombination(player1, face);
+  checkCombination(player2, face);
 
   return 0;
 }
@@ -52,22 +57,29 @@ void shuffle(int deck[][13]) {
 void deal(
   int player[][2], const int deck[][13], const char *face[], const char *suit[]
 ) {
+  static int card = 0;
+  int length = card + 5;
+
   int row;
   int column;
-  int card;
+  int number_of_card = 0;
 
-  for (card = 0; card < 5; card++) {
+  for (; card < length; card++) {
     for (row = 0; row < 4; row++) {
       for (column = 0; column < 13; column++) {
         if (deck[row][column] == card) {
-          player[card][0] = column;
-          player[card][1] = row;
+          player[number_of_card][0] = column;
+          player[number_of_card][1] = row;
 
-          printf("%5s of %-8s\n", face[player[card][0]], suit[player[card][1]]);
+          number_of_card += 1;
+
+          printf("%5s of %-8s\n", face[column], suit[row]);
         }
       }
     }
   }
+
+  printf("\n");
 }
 
 void checkCombination(const int player_cards[][2], const char *face[]) {
