@@ -3,13 +3,13 @@
 #include <time.h>
 
 void shuffle(int deck[][13]);
+void deal(int player[][2], const int length, const int deck[][13]);
+
 int checkCombination(const int player_cards[][2], const char *face[]);
 
-void deal(
-  int player[][2],
-  const int deck[][13],
-  const char *face[],
-  const char *suit[]
+void printCards(
+  const int cards[][2], const int length, const int is_face_down,
+  const char *suit[], const char *face[]
 );
 
 int main(void) {
@@ -22,28 +22,51 @@ int main(void) {
   };
 
   int deck[4][13] = { 0 };
-  int player1[5][2] = { 0 };
-  int player2[5][2] = { 0 };
+  int dealer[5][2] = { 0 };
+  int player[5][2] = { 0 };
 
   srand(time(NULL));
 
   shuffle(deck);
+  deal(dealer, 5, deck);
+  deal(player, 5, deck);
 
-  printf("Cards of player1:\n");
+  printf("Cards of dealer:\n");
   printf("=================\n");
-  deal(player1, deck, face, suit);
+  printCards(dealer, 5, 1, suit, face);
 
-  printf("\nCards of player2:\n");
+  printf("\nCards of player:\n");
   printf("=================\n");
-  deal(player2, deck, face, suit);
+  printCards(player, 5, 0, suit, face);
 
-  printf("\nPlayer1 has ");
-  int power1 = checkCombination(player1, face);
-  printf("\nPlayer2 has ");
-  int power2 = checkCombination(player2, face);
+  printf("\nPlayer has ");
+  checkCombination(player, face);
 
-  if (power1 > power2) printf("\nPlayer1 won\n");
-  else if (power1 < power2) printf("\nPlayer2 won\n");
+  printf("\nEnter the card numbers you would like to replace ");
+  printf("(1-5 or -1 to complete)\n");
+
+  int numbers_of_card[5] = {0};
+  for (int i = 0; i < 5 && numbers_of_card[i - 1] != -1; i++) {
+    scanf("%d", &numbers_of_card[i]);
+    if (~numbers_of_card[i]) numbers_of_card[i] -= 1;
+    deal(&player[numbers_of_card[i]], 1, deck);
+  }
+
+  printf("\nCards of dealer:\n");
+  printf("=================\n");
+  printCards(dealer, 5, 0, suit, face);
+
+  printf("\nCards of player:\n");
+  printf("=================\n");
+  printCards(player, 5, 0, suit, face);
+
+  printf("\nDealer has ");
+  int power1 = checkCombination(dealer, face);
+  printf("\nPlayer has ");
+  int power2 = checkCombination(player, face);
+
+  if (power1 > power2) printf("\nDealer won\n");
+  else if (power1 < power2) printf("\nPlayer won\n");
   else printf("\nIt is draw\n");
 
   return 0;
@@ -63,29 +86,35 @@ void shuffle(int deck[][13]) {
   }
 }
 
-void deal(
-  int player[][2], const int deck[][13], const char *face[], const char *suit[]
-) {
+void deal(int cards[][2], const int length, const int deck[][13]) {
   static int card = 0;
-  int length = card + 5;
+  int l = card + length;
 
   int row;
   int column;
   int number_of_card = 0;
 
-  for (; card < length; card++) {
+  for (; card < l; card++) {
     for (row = 0; row < 4; row++) {
       for (column = 0; column < 13; column++) {
         if (deck[row][column] == card) {
-          player[number_of_card][0] = column;
-          player[number_of_card][1] = row;
+          cards[number_of_card][0] = column;
+          cards[number_of_card][1] = row;
 
           number_of_card += 1;
-
-          printf("%5s of %-8s\n", face[column], suit[row]);
         }
       }
     }
+  }
+}
+
+void printCards(
+  const int cards[][2], const int length, const int is_face_down,
+  const char *suit[], const char *face[]
+) {
+  for (int i = 0; i < length; i++) {
+    if (is_face_down) printf("%5s of %-8s %d\n", "Back", "Card", i + 1);
+    else printf("%5s of %-8s %d\n", face[cards[i][0]], suit[cards[i][1]], i + 1);
   }
 }
 
