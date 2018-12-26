@@ -243,7 +243,8 @@ int checkOnePair(const int player_cards[][2]) {
     }
 
     if (count != 2) count = 1;
-    else return score * (player_cards[i][0] || 13); // if ace, 0 replace by 13
+    // if ace, 0 replace by 13
+    else return score * (player_cards[i][0] ? player_cards[i][0] : 13);
   }
 
   return 0;
@@ -273,8 +274,8 @@ int checkTwoPairs(const int player_cards[][2]) {
 
   if (~face_of_two && ~face_of_two2) {
     // if ace, 0 replace by 13
-    face_of_two = face_of_two || 13;
-    face_of_two2 = face_of_two2 || 13;
+    face_of_two = face_of_two ? face_of_two : 13;
+    face_of_two2 = face_of_two2 ? face_of_two2 : 13;
 
     if (face_of_two > face_of_two2) return score * face_of_two + face_of_two2;
     return score * face_of_two2 + face_of_two;
@@ -293,7 +294,8 @@ int checkThreeOfKind(const int player_cards[][2]) {
     }
 
     if (count != 3) count = 1;
-    else return score * (player_cards[i][0] || 13); // if ace, 0 replace by 13
+    // if ace, 0 replace by 13
+    else return score * (player_cards[i][0] ? player_cards[i][0] : 13);
   }
 
   return 0;
@@ -361,8 +363,8 @@ int checkFullHouse(const int player_cards[][2]) {
 
   if (~face_of_three && ~face_of_two) {
     // if ace, 0 replace by 13
-    face_of_three = face_of_three || 13;
-    face_of_two = face_of_two || 13;
+    face_of_three = face_of_three ? face_of_three : 13;
+    face_of_two = face_of_two ? face_of_two : 13;
 
     return score * face_of_three + face_of_two;
   }
@@ -380,10 +382,8 @@ int checkFourOfKind(const int player_cards[][2]) {
     }
 
     if (count != 4) count = 1;
-    else {
-      // if ace, 0 replace by 13
-      return score * (player_cards[i][0] || 13); // if ace, 0 replace by 13
-    }
+    // if ace, 0 replace by 13
+    else return score * (player_cards[i][0] ? player_cards[i][0] : 13);
   }
 
   return 0;
