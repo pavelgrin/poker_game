@@ -21,13 +21,20 @@ int main(void) {
     "Nine", "Ten", "Jack", "Queen", "King",
   };
 
-  int deck[4][13] = { 0 };
+  int deck[4][13] = {
+    {  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13 },
+    { 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26 },
+    { 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39 },
+    { 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52 },
+  };
+
   int dealer[5][2] = { 0 };
   int player[5][2] = { 0 };
 
   srand(time(NULL));
 
   shuffle(deck);
+
   deal(dealer, 5, deck);
   deal(player, 5, deck);
 
@@ -73,16 +80,20 @@ int main(void) {
 }
 
 void shuffle(int deck[][13]) {
-  int row;
-  int column;
+  int rand_row;
+  int rand_column;
+  int temp_var;
 
-  for (int card = 0; card < 52; card++) {
-    do {
-      row = rand() % 4;
-      column = rand() % 13;
-    } while (deck[row][column] != 0);
-
-    deck[row][column] = card;
+  for (int row = 0; row < 4; row++) {
+    for (int column = 0; column < 13; column++) {
+      rand_row = rand() % 4;
+      rand_column = rand() % 13;
+      
+      temp_var = deck[rand_row][rand_column];
+      printf("%d ", temp_var);
+      deck[rand_row][rand_column] = deck[row][column];
+      deck[row][column] = temp_var;
+    }
   }
 }
 
@@ -94,6 +105,8 @@ void deal(int cards[][2], const int length, const int deck[][13]) {
   int column;
   int number_of_card = 0;
 
+  int is_found = 0;
+
   for (; card < l; card++) {
     for (row = 0; row < 4; row++) {
       for (column = 0; column < 13; column++) {
@@ -102,7 +115,15 @@ void deal(int cards[][2], const int length, const int deck[][13]) {
           cards[number_of_card][1] = row;
 
           number_of_card += 1;
+
+          is_found = 1;
+          break;
         }
+      }
+
+      if (is_found) {
+        is_found = 0;
+        break;
       }
     }
   }
