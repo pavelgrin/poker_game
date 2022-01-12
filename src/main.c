@@ -155,7 +155,7 @@ int checkCombination(const int player_cards[][2], const char *face[]) {
     int checkFullHouse(const int player_cards[][2]);
     int checkFourOfKind(const int player_cards[][2]);
 
-    const int max_score_of_straight = 1741522; // it's max score of TJQKA offsuit
+    const int max_score_of_straight = 1741522; // it's max score of TJQKA of suit
 
     const int score_of_cards = getScoreOfCards(player_cards);
     const int high_card = getHighCard(player_cards);
